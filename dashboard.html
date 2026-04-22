@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+    font-family: Arial;
+    background: #f4f6f9;
+    margin: 0;
+    padding: 10px;
+}
+
+.container {
+    max-width: 500px;
+    margin: auto;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+}
+
+.kpi {
+    display: flex;
+    justify-content: space-between;
+}
+
+.valor {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.pendente {
+    color: red;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>📊 Dashboard</h2>
+
+    <div class="card kpi">
+        <div>Faturamento</div>
+        <div class="valor">R$ {{ faturamento }}</div>
+    </div>
+
+    <div class="card kpi">
+        <div>Serviços</div>
+        <div class="valor">{{ total_servicos }}</div>
+    </div>
+
+    <div class="card kpi">
+        <div>Pendentes</div>
+        <div class="valor pendente">{{ pendentes }}</div>
+    </div>
+
+    <div class="card">
+        <h3>Faturamento por dia</h3>
+        <canvas id="grafico"></canvas>
+    </div>
+
+    <div class="card">
+        <h3>Últimos serviços</h3>
+
+        {% for s in recentes %}
+            <p>
+                <b>{{ s.cliente.nome }}</b><br>
+                R$ {{ s.valor }} - {{ s.data }}<br>
+                {{ s.status }}
+            </p>
+        {% endfor %}
+    </div>
+
+</div>
+
+{{ dias|json_script:"dias-data" }}
+{{ valores|json_script:"valores-data" }}
+
+<script>
+const dias = JSON.parse(document.getElementById('dias-data').textContent);
+const valores = JSON.parse(document.getElementById('valores-data').textContent);
+
+new Chart(document.getElementById('grafico'), {
+    type: 'line',
+    data: {
+        labels: dias,
+        datasets: [{
+            label: 'Faturamento',
+            data: valores,
+        }]
+    }
+});
+</script>
+
+</body>
+</html>
