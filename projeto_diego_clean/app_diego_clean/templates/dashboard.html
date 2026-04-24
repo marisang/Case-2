@@ -1,47 +1,6 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends 'base.html' %}
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<style>
-body {
-    font-family: Arial;
-    background: #f4f6f9;
-    margin: 0;
-    padding: 10px;
-}
-
-.container {
-    max-width: 500px;
-    margin: auto;
-}
-
-.card {
-    background: white;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 12px;
-}
-
-.kpi {
-    display: flex;
-    justify-content: space-between;
-}
-
-.valor {
-    font-size: 22px;
-    font-weight: bold;
-}
-
-.pendente {
-    color: red;
-}
-</style>
-</head>
-
-<body>
+{% block content %}
 
 <div class="container">
 
@@ -62,52 +21,155 @@ body {
         <div class="valor pendente">{{ pendentes }}</div>
     </div>
 
+    <!--Add Serviço-->
     <div class="card">
-        <h3>Faturamento por dia</h3>
-        <canvas id="grafico"></canvas>
+        <h3>Adicionar Serviço</h3>
+
+        <form id="form_servico">
+            {% csrf_token %}
+
+            <input type="text" name="cliente" placeholder="Nome do cliente" required>
+            <input type="number" name="valor" placeholder="Valor" required>
+            
+            <select name="status">
+                <option value="Pendente">Pendente</option>
+                <option value="Concluído">Concluído</option>
+            </select>
+
+            <button type="button" onclick="adicionarServico()">Adicionar</button>
+        </form>
+
+        <p id="mensagem_servico"></p>
     </div>
 
+    <!--Lista de Serviços-->
     <div class="card">
-        <h3>Últimos serviços</h3>
+    <h3>Serviços</h3>
 
-        {% for s in recentes %}
-            <p>
-                <b>{{ s.cliente.nome }}</b><br>
-                R$ {{ s.valor }} - {{ s.data }}<br>
-                {{ s.status }}
-            </p>
-        {% endfor %}
+    <div class="tabela-container">
+        <table class="tabela-servicos">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                    <th>Usuário</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for s in servicos %}
+                <tr>
+                    <td>{{ s.cliente.nome }}</td>
+
+                    <td>
+                        <input type="number" value="{{ s.valor }}" id="valor_{{ s.id }}">
+                    </td>
+
+                    <td>
+                        <select id="status_{{ s.id }}">
+                            <option {% if s.status == "Pendente" %}selected{% endif %}>Pendente</option>
+                            <option {% if s.status == "Concluído" %}selected{% endif %}>Concluído</option>
+                        </select>
+                    </td>
+
+                    <td>{{ s.data|date:"d/m/Y H:i" }}</td>
+
+                    <td>
+                        {% if s.usuario %}
+                            {{ s.usuario.username }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                    <td class="acoes">
+                        <button onclick="editarServico('{{ s.id }}')" class="btn salvar">Salvar</button>
+                        <button onclick="removerServico('{{ s.id }}')" class="btn remover">Remover</button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="vazio">Nenhum serviço cadastrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+</div>
 
+<div class="card">
+    <h3>Cadastro</h3>
+
+    <div class="card-conteudo">
+        <p>Cadastrar novos usuários no sistema</p>
+
+        <a href="{% url 'cadastro' %}">
+            <button class="btn cadastro">Cadastrar Usuário</button>
+        </a>
+    </div>
 </div>
-<div class="secao"> <!-- mudar -->
-    <a href="{% url 'cadastro' %}">
-        <button>Cadastrar novo usuario</button>
-    </a>
-</div>
-<div class="secao"><!-- mudar -->
-    <a href="{% url 'logout' %}">
-        <button>Sair</button>
-    </a>
-</div>
-{{ dias|json_script:"dias-data" }}
-{{ valores|json_script:"valores-data" }}
 
 <script>
-const dias = JSON.parse(document.getElementById('dias-data').textContent);
-const valores = JSON.parse(document.getElementById('valores-data').textContent);
 
-new Chart(document.getElementById('grafico'), {
-    type: 'line',
-    data: {
-        labels: dias,
-        datasets: [{
-            label: 'Faturamento',
-            data: valores,
-        }]
-    }
-});
+function getCSRFToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+}
+
+function adicionarServico() {
+    const form = document.getElementById('form_servico')
+    const formData = new FormData(form)
+
+    fetch("{% url 'adicionar_servico' %}", {
+    method: 'POST',
+    body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('mensagem_servico').innerText = data.mensagem
+        location.reload()
+    })
+}
+
+function editarServico(id) {
+    const valor = document.getElementById(`valor_${id}`).value
+    const status = document.getElementById(`status_${id}`).value
+
+    const formData = new FormData()
+    formData.append('id', id)
+    formData.append('valor', valor)
+    formData.append('status', status)
+    formData.append('csrfmiddlewaretoken', getCSRFToken())
+
+    fetch("{% url 'editar_servico' %}", {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.mensagem)
+        location.reload()
+    })
+}
+
+function removerServico(id) {
+    const formData = new FormData()
+    formData.append('id', id)
+    formData.append('csrfmiddlewaretoken', getCSRFToken())
+
+    fetch("{% url 'remover_servico' %}", {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.mensagem)
+        location.reload()
+    })
+}
+
 </script>
 
-</body>
-</html>
+{% endblock %}

@@ -1,105 +1,289 @@
-body {
-    font-family: Montserrat;
-    background-color: #FFFFFF;
+html, body {
+    height: 100%;
+    margin: 0;
 }
 
-h1 {
-    font-family: Montserrat;
-    font-weight: bold;
-    text-align: center;
-    margin: 50px;
+body {
+    font-family: Montserrat, sans-serif;
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 h2 {
-    font-family: Montserrat;
-    font-weight: medium;
-    text-align: center;
+    font-size: 24px;
 }
 
-.navbar {
+h3 {
+    font-size: 20px;
+}
+
+.valor {
+    font-size: 24px;
+}
+
+.main-content {
+    flex: 1; 
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    background-color: #F9A825;
-    padding: 15px 30px;
-}
-
-.navbar nav a {
-    background-color: #FFFFFF;
-    color: #5F6368;
-    text-decoration: none;
-    padding: 8px 16px;
-    margin-left: 20px;
-    font-size: 16px;
-    border-radius: 20px;
-    border-color: #1A73E8;
-    border-width: 20px;
-    display: inline-block;
-    transition: 0.3s;
-}
-
-.navbar nav a:hover {
-    transform: scale(1.1);
-    box-shadow: #5F6368;
-}
-
-.rodape {
-    background-color: #F9A825;
-    color: #FFFFFF;
-    text-align: center;
-    padding: 15px;
-    margin-top: 40px;
+    padding: 20px;
 }
 
 .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh;
+    min-height: 100vh;
+    padding: 20px;
 }
 
 .login-card {
     background-color: #FFFFFF;
-    padding: 30px;
+    padding: 25px;
     border-radius: 12px;
-    width: 320px;
+    max-width: 500px;
+    height: 450px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
 .login-card input {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin: 10px 0;
     border-radius: 8px;
-    border: 1px solid #FFFFFF;
+    border: 1px solid #ccc;
+    font-size: 16px;
 }
 
 .login-card button {
     width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    background-color: #1A73E8;
+    padding: 12px;
+    margin-top: 50px;
+    background-color: #004d40;
     color: #FFFFFF;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: 0.3s;
+    font-size: 16px;
 }
 
 .login-card button:hover {
-    background-color: #1558b0;
+    background-color: #02372e;
 }
-
-.login-card a {
-    display: block;
-    margin-top: 15px;
-    color: #1A73E8;
-    text-decoration: none;
-}
-
 
 .logo {
-    width: 130px;
-    margin-bottom: 10px;
+    width: 100px;
+    margin-bottom: 30px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #004d40;
+    padding: 15px 19px;
+    flex-wrap: wrap;
+}
+
+.navbar nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.navbar nav a {
+    background-color: #FFFFFF;
+    color: #5F6368;
+    text-decoration: none;
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+.navbar nav a:hover {
+    transform: scale(1.05);
+}
+
+.rodape {
+    background-color: #004d40;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 12px;
+    margin-top: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.card {
+    padding: 22px;
+    margin-bottom: 20px;
+    border-radius: 16px;
+    font-size: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.kpi {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+}
+
+.valor {
+    font-size: 28px;
+    font-weight: bold;
+} 
+
+.pendente { 
+    color: red; 
+}
+
+.tabela-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.tabela-servicos {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+.tabela-servicos thead {
+    background-color: #004d40;
+    color: white;
+}
+
+.tabela-servicos th,
+.tabela-servicos td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabela-servicos tr:hover {
+    background-color: #f5f5f5;
+}
+
+.tabela-servicos input,
+.tabela-servicos select {
+    width: 100%;
+    padding: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+#form_servico {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+/* INPUTS E SELECT PADRONIZADOS */
+#form_servico input,
+#form_servico select {
+    width: 100%;
+    max-width: 300px; /* 👈 deixa todos do mesmo tamanho */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* BOTÃO ALINHADO COM OS CAMPOS */
+#form_servico button {
+    width: 100%;
+    max-width: 300px; /* 👈 MESMA LARGURA */
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background-color: #004d40;
+    color: white;
+    cursor: pointer;
+}
+
+.btn {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 2px;
+}
+
+.btn.salvar {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn.remover {
+    background-color: #e53935;
+    color: white;
+}
+
+.card-conteudo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn.cadastro {
+    background-color: #004d40;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn.cadastro:hover {
+    background-color: #02372e;
+}
+
+.vazio {
+    text-align: center;
+    padding: 15px;
+    color: #777;
+}
+
+@media (max-width: 600px) {
+    .tabela-servicos {
+        font-size: 12px;
+    }
+
+    .btn {
+        padding: 5px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        margin: 20px;
+        font-size: 22px;
+    }
+    h2 {
+        font-size: 18px;
+    }
+    .login-card {
+        padding: 20px;
+    }
 }
