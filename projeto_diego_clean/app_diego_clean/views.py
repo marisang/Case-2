@@ -124,4 +124,6 @@ def remover_servico(request):
             return JsonResponse({'mensagem': 'Sem permissão'})
         servico.delete()
         return JsonResponse({'mensagem': 'Serviço removido com sucesso!'})
+
     return JsonResponse({'mensagem': 'Erro'})
+

@@ -1,0 +1,58 @@
+# 🔐 Variáveis de ambiente
+.env
+.env.*
+*.env
+
+# 🐍 Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtualenv
+venv/
+env/
+.venv/
+
+# 🗄️ Banco de dados (SQLite)
+db.sqlite3
+db.sqlite3-journal
+
+# 📦 Arquivos de build / distribuição
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# 📁 Arquivos estáticos e mídia
+staticfiles/
+media/
+uploads/
+
+# ⚙️ Configurações locais (IMPORTANTE)
+local_settings.py
+
+# 🔑 Segredos
+secret.json
+
+# 🧪 Testes / cobertura
+htmlcov/
+.coverage
+coverage.xml
+*.cover
+.pytest_cache/
+
+# 📝 Logs
+*.log
+logs/
+
+# 💻 IDEs / editores
+.vscode/
+.idea/
+
+# 💻 Sistema operacional
+.DS_Store
+Thumbs.db
+
+# 🐳 Docker (opcional)
+.docker/
+docker-compose.override.yml
