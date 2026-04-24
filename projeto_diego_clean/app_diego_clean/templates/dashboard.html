@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    <h2>📊 Dashboard</h2>
+
+    <div class="card kpi">
+        <div>Faturamento</div>
+        <div class="valor">R$ {{ faturamento }}</div>
+    </div>
+
+    <div class="card kpi">
+        <div>Serviços</div>
+        <div class="valor">{{ total_servicos }}</div>
+    </div>
+
+    <div class="card kpi">
+        <div>Pendentes</div>
+        <div class="valor pendente">{{ pendentes }}</div>
+    </div>
+
+    <!--Add Serviço-->
+    <div class="card">
+        <h3>Adicionar Serviço</h3>
+
+        <form id="form_servico">
+            {% csrf_token %}
+
+            <input type="text" name="cliente" placeholder="Nome do cliente" required>
+            <input type="number" name="valor" placeholder="Valor" required>
+            
+            <select name="status">
+                <option value="Pendente">Pendente</option>
+                <option value="Concluído">Concluído</option>
+            </select>
+
+            <button type="button" onclick="adicionarServico()">Adicionar</button>
+        </form>
+
+        <p id="mensagem_servico"></p>
+    </div>
+
+    <!--Lista de Serviços-->
+    <div class="card">
+    <h3>Serviços</h3>
+
+    <div class="tabela-container">
+        <table class="tabela-servicos">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                    <th>Usuário</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for s in servicos %}
+                <tr>
+                    <td>{{ s.cliente.nome }}</td>
+
+                    <td>
+                        <input type="number" value="{{ s.valor }}" id="valor_{{ s.id }}">
+                    </td>
+
+                    <td>
+                        <select id="status_{{ s.id }}">
+                            <option {% if s.status == "Pendente" %}selected{% endif %}>Pendente</option>
+                            <option {% if s.status == "Concluído" %}selected{% endif %}>Concluído</option>
+                        </select>
+                    </td>
+
+                    <td>{{ s.data|date:"d/m/Y H:i" }}</td>
+
+                    <td>
+                        {% if s.usuario %}
+                            {{ s.usuario.username }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                    <td class="acoes">
+                        <button onclick="editarServico('{{ s.id }}')" class="btn salvar">Salvar</button>
+                        <button onclick="removerServico('{{ s.id }}')" class="btn remover">Remover</button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="vazio">Nenhum serviço cadastrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Cadastro</h3>
+
+    <div class="card-conteudo">
+        <p>Cadastrar novos usuários no sistema</p>
+
+        <a href="{% url 'cadastro' %}">
+            <button class="btn cadastro">Cadastrar Usuário</button>
+        </a>
+    </div>
+</div>
+
+<script>
+
+function getCSRFToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+}
+
+function adicionarServico() {
+    const form = document.getElementById('form_servico')
+    const formData = new FormData(form)
+
+    fetch("{% url 'adicionar_servico' %}", {
+    method: 'POST',
+    body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('mensagem_servico').innerText = data.mensagem
+        location.reload()
+    })
+}
+
+function editarServico(id) {
+    const valor = document.getElementById(`valor_${id}`).value
+    const status = document.getElementById(`status_${id}`).value
+
+    const formData = new FormData()
+    formData.append('id', id)
+    formData.append('valor', valor)
+    formData.append('status', status)
+    formData.append('csrfmiddlewaretoken', getCSRFToken())
+
+    fetch("{% url 'editar_servico' %}", {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.mensagem)
+        location.reload()
+    })
+}
+
+function removerServico(id) {
+    const formData = new FormData()
+    formData.append('id', id)
+    formData.append('csrfmiddlewaretoken', getCSRFToken())
+
+    fetch("{% url 'remover_servico' %}", {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.mensagem)
+        location.reload()
+    })
+}
+
+</script>
+
+{% endblock %}
