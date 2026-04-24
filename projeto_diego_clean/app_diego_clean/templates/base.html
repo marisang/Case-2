@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}a{% endblock %}</title>
+    <!-- Fonte Monstesserat-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&family=Lexend:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <nav>
+            <a href="{% url 'login' %}">Home</a>
+        </nav>
+    </header>
+    <!-- Conteúdo principal -->
+    <div class="main-content">
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+    </div>    
+    <!-- Rodapé -->
+    <footer class="rodape">
+        <p>© 2026 Diego Clean</p>
+    </footer>
+</body>
+</html>
